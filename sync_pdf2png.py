@@ -25,17 +25,8 @@ for pdf in pdflist:
     os.rename(pdf, rename)
 
     # pdf를 png로 변환
-    with Image(filename=rename, resolution=300) as pdf:
-        rename = rename[:-3] + "png"
+    with Image(filename=rename, resolution=600) as pdf:
+        pngname = rename[:-3] + "png"
         pdf.format = "png"
-        pdf.save(filename=rename)
-        print(rename)
-"""
-오류 발생
-Traceback (most recent call last):
-  File "/Users/sinsky/code/python/sync2png/sync_pdf2png.py", line 30, in <module>
-    pdf.format = "png"
-  File "/Users/sinsky/code/vertualenv/pdf2png/lib/python3.5/site-packages/wand/image.py", line 2711, in format
-    raise ValueError(repr(fmt) + ' is unsupported format')
-ValueError: 'png' is unsupported format
-"""
+        pdf.save(filename=pngname)
+        print(pngname)
