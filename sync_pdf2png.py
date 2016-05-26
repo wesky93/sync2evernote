@@ -24,9 +24,12 @@ for pdf in pdflist:
                                                      filename=pdf[len(sync) + 1:])
     os.rename(pdf, rename)
 
+    # 할일 : 파일 변환을 함수로 변환# 할일 : 파일 변환을 함수로 변환
     # pdf를 png로 변환
     with Image(filename=rename, resolution=600) as pdf:
         pngname = rename[:-3] + "png"
         pdf.format = "png"
         pdf.save(filename=pngname)
-        print(pngname)
+        # 수정 : 파일 변환후 이전 파일이 삭제되게 수정
+
+    os.remove(rename)
