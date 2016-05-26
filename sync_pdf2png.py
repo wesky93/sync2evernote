@@ -14,22 +14,30 @@ def ctime_prefix(name):
     ctime = "/" + str(datetime.datetime.fromtimestamp(ctime))[:10] + "_"
     return ctime
 
+def pdf2png(rename):
+    """
+    pdf를 png로 변환
+    :param pdf: pdf파일의 절대 경로
+    :return: 변환된 png파일명
+    """
+    with Image(filename=rename, resolution=600) as pdf:
+        pngname = rename[:-3] + "png"
+        pdf.format = "png"
+        pdf.save(filename=pngname)
+        return pngname
 
 sync = "/Users/sinsky/Documents/Sync"  # sync의 파일이 자동 동기화 되는 폴더 절대 경로
 
 pdflist = glob.glob("%s/*.pdf" % (sync))  # snyc의 폴더에서 pdf파일만 추출
 
 for pdf in pdflist:
-    rename = "{syncfolder}{prefix}{filename}".format(syncfolder=sync, prefix=ctime_prefix(pdf),
-                                                     filename=pdf[len(sync) + 1:])
-    os.rename(pdf, rename)
-
-    # 할일 : 파일 변환을 함수로 변환# 할일 : 파일 변환을 함수로 변환
-    # pdf를 png로 변환
-    with Image(filename=rename, resolution=600) as pdf:
-        pngname = rename[:-3] + "png"
-        pdf.format = "png"
-        pdf.save(filename=pngname)
-        # 수정 : 파일 변환후 이전 파일이 삭제되게 수정
-
-    os.remove(rename)
+    # prefix추가된 파일명
+    # 수정 : 하드코딩 대신 os.path.basename 과 os.path.dirname을 이용하기
+    # 수정 : os.path.join사용하기
+    rename = "{syncfolder}{prefix}{filename}".format(syncfolder=os.path.dirname(pdf), prefix=ctime_prefix(pdf),
+                                                     filename=os.path.basename(pdf))
+    os.rename(pdf, rename)      # prefix추가된 파일명으로 변환
+    pngname = pdf2png(rename)   # pdf를 png로 변환
+    print(rename, "을 ",pngname,"으로 변환했습니다.")
+    os.remove(rename)           # pdf 삭제
+    print(rename,"을 삭제하였습니다")
