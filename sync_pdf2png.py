@@ -6,7 +6,6 @@ import datetime
 import glob
 from wand.image import Image
 
-# 할일 : 파이썬 2.7로 마이그레이션
 
 def ctime_prefix(name):
     """
@@ -39,8 +38,6 @@ pdflist = glob.glob("%s/*.pdf" % (sync))  # snyc의 폴더에서 pdf파일만 �
 
 for pdf in pdflist:
     # prefix추가된 파일명
-    # 수정 : 하드코딩 대신 os.path.basename 과 os.path.dirname을 이용하기
-    # 수정 : os.path.join사용하기
     rename = os.path.join(os.path.dirname(pdf),ctime_prefix(pdf)+os.path.basename(pdf))
     os.rename(pdf, rename)      # prefix추가된 파일명으로 변환
     pngname = pdf2png(rename)   # pdf를 png로 변환
