@@ -1,8 +1,12 @@
+#-*- coding: utf-8 -*-
+
+import sys
 import os
 import datetime
 import glob
 from wand.image import Image
 
+# 할일 : 파일명의 구조가 prefix+노트북+노트명이 되도록 구성하자.
 
 def ctime_prefix(name):
     """
@@ -10,8 +14,8 @@ def ctime_prefix(name):
     :param path: 파일 절대경로
     :return: 파일 생성시간 prefix (str)
     """
-    ctime = os.path.getmtime(name)  # 파일 생성시간 취득
-    ctime = "/" + str(datetime.datetime.fromtimestamp(ctime))[:10] + "_"
+    ctime = os.path.getmtime(name)
+    ctime = str(datetime.datetime.fromtimestamp(ctime))[:10] + "_"
     return ctime
 
 def pdf2png(rename):
@@ -26,18 +30,20 @@ def pdf2png(rename):
         pdf.save(filename=pngname)
         return pngname
 
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 sync = "/Users/sinsky/Documents/Sync"  # sync의 파일이 자동 동기화 되는 폴더 절대 경로
 
 pdflist = glob.glob("%s/*.pdf" % (sync))  # snyc의 폴더에서 pdf파일만 추출
 
 for pdf in pdflist:
     # prefix추가된 파일명
-    # 수정 : 하드코딩 대신 os.path.basename 과 os.path.dirname을 이용하기
-    # 수정 : os.path.join사용하기
-    rename = "{syncfolder}{prefix}{filename}".format(syncfolder=os.path.dirname(pdf), prefix=ctime_prefix(pdf),
-                                                     filename=os.path.basename(pdf))
+    rename = os.path.join(os.path.dirname(pdf),ctime_prefix(pdf)+os.path.basename(pdf))
     os.rename(pdf, rename)      # prefix추가된 파일명으로 변환
     pngname = pdf2png(rename)   # pdf를 png로 변환
-    print(rename, "을 ",pngname,"으로 변환했습니다.")
+    print rename, "을 ",pngname,"으로 변환했습니다."
     os.remove(rename)           # pdf 삭제
-    print(rename,"을 삭제하였습니다")
+    print rename,"을 삭제하였습니다"
+
+import post2evernote
