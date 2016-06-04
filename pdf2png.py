@@ -6,7 +6,7 @@ import datetime
 import glob
 from wand.image import Image
 
-# 할일 : 파일명의 구조가 prefix+노트북+노트명이 되도록 구성하자.
+# 할일 : 폴더 내의 폴더(노트북 폴더)의 파일도 정상적으로 변경이 되는지 확인 필요
 
 def ctime_prefix(name):
     """
