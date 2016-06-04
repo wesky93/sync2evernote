@@ -27,10 +27,7 @@ note_store = client.get_note_store()
 
 # List all of the notebooks in the user's account
 notebooks = note_store.listNotebooks()
-"""
-for notebook in notebooks:
-    print "  * ", notebook.name
-"""
+
 
 # 할일 : sync폴더에서 png파일만 추출
 # 할일 : 이미지 파일명에서 파일명, 노트북, 작성날짜 추출하여 딕셔너리로 전달하는 함수 추가
