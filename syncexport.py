@@ -4,7 +4,7 @@ from os.path import exists,basename,join
 import shutil
 import glob
 
-# sync기기에 있는 노트 필기를 작업 폴더로 옮김후 싱크노트 삭제
+# sync기기에 저장된 pdf를 작업폴더로 이동시키는 프로그램
 
 def folder_check(path):
     result = exists(path)
