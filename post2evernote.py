@@ -1,13 +1,4 @@
 #-*- coding: utf-8 -*-#
-
-# A simple Evernote API demo script that lists all notebooks in the user's
-# account and creates a simple test note in the default notebook.
-#
-# Before running this sample, you must fill in your Evernote developer token.
-#
-# To run (Unix):
-#   export PYTHONPATH=../../lib; python EDAMTest.py
-#
 from my_token import test_token,pro_token
 import sys
 import hashlib
