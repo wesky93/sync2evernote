@@ -36,13 +36,13 @@ def convert_pdf(pdflist):
 	각 폴더의 파일 리스트를 넘겨받아 pdf의 이름과 확장자를 변경
 	'''
 	for pdf in pdflist:
-    # prefix추가된 파일명
-    rename = os.path.join(os.path.dirname(pdf),ctime_prefix(pdf)+os.path.basename(pdf))
-    os.rename(pdf, rename)      # prefix추가된 파일명으로 변환
-    pngname = pdf2png(rename)   # pdf를 png로 변환
-    print rename, "을 ",pngname,"으로 변환했습니다."
-    os.remove(rename)           # pdf 삭제
-    print rename,"을 삭제하였습니다"
+		# prefix추가된 파일명
+		rename = os.path.join(os.path.dirname(pdf),ctime_prefix(pdf)+os.path.basename(pdf))
+		os.rename(pdf, rename)      # prefix추가된 파일명으로 변환
+		pngname = pdf2png(rename)   # pdf를 png로 변환
+		print rename, "을 ",pngname,"으로 변환했습니다."
+		os.remove(rename)           # pdf 삭제
+		print rename,"을 삭제하였습니다"
 
 # 2.7한글 호환
 reload(sys)
