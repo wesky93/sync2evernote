@@ -30,10 +30,12 @@ def pdf2png(rename):
         pdf.save(filename=pngname)
         return pngname
 
+# 2.7한글 호환
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-sync = "/Users/sinsky/Documents/Sync"  # sync의 파일이 자동 동기화 되는 폴더 절대 경로
+# sync의 파일이 자동 동기화 되는 폴더 절대 경로
+sync = "/Users/sinsky/Documents/Sync" 
 
 pdflist = glob.glob("%s/*.pdf" % (sync))  # snyc의 폴더에서 pdf파일만 추출
 
