@@ -30,16 +30,12 @@ def pdf2png(rename):
         pdf.save(filename=pngname)
         return pngname
 
-# 2.7한글 호환
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
-# sync의 파일이 자동 동기화 되는 폴더 절대 경로
-sync = "/Users/sinsky/Documents/Sync" 
-
-pdflist = glob.glob("%s/*.pdf" % (sync))  # snyc의 폴더에서 pdf파일만 추출
-
-for pdf in pdflist:
+def convert_pdf(pdflist):	
+	'''
+	각 폴더의 파일 리스트를 넘겨받아 pdf의 이름과 확장자를 변경
+	'''
+	for pdf in pdflist:
     # prefix추가된 파일명
     rename = os.path.join(os.path.dirname(pdf),ctime_prefix(pdf)+os.path.basename(pdf))
     os.rename(pdf, rename)      # prefix추가된 파일명으로 변환
@@ -47,5 +43,22 @@ for pdf in pdflist:
     print rename, "을 ",pngname,"으로 변환했습니다."
     os.remove(rename)           # pdf 삭제
     print rename,"을 삭제하였습니다"
+
+# 2.7한글 호환
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+# 분류된 파일이 위치한 절대경로
+work_dir = "/Users/sinsky/Documents/Sync" 
+os.chdir(work_dir) 
+
+nbook_list = os.listdir(work_dir)
+
+# 각 폴더(노트북)의 pdf파일 이름과 확장자 변경
+for notebook in nbook_list:
+	notebook = os.path.join(work_dir,notebook)
+	pdflist = glob.glob("%s/*.pdf" % (notebook))  # 각 폴더의 pdf파일 추출
+	convert_pdf(pdflist)
+
 
 import post2evernote
