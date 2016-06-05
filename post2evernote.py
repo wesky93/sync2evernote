@@ -4,9 +4,41 @@ import sys
 import hashlib
 import binascii
 import evernote.edam.type.ttypes as Types
-
+from os import listdir
 from evernote.api.client import EvernoteClient
 
+에버노트에 노트북 생성해주는 함수
+def mk_notebook(nbooks,note_store):
+	for nbook in nbooks:
+		
+
+
+
+# 노트북 조회 함수
+def match_notebooks(work_path,client=client,):
+	note_store = client.get_note_store()
+	notebooks = note_store.listNotebooks()	#에버노트 노트북 목록 조회
+	
+	folder_list = listdir(work_path)	#로컬 노트북(폴더) 목록 조회
+	
+	workbook = {} # 작업에 이용될 노트북과 guid가 저장된 딕셔너리 key=노트북명 value=guid
+	nmatch_books =[] # 에버노트에 존재하지 않는 노트북 리스트
+	
+	for nbook in folder_list:	#매칭되는 노트북 조회
+		if nbook in notebooks:
+			workbook[nbook] = ""	# 에버노트에 매칭 되는 노트북은 딕셔너리 추가
+		else:
+			nmatch_books.append(nbook)	# 에버노트에 없는 노트북은 리스트에 추가
+	# 할일 : nmatch_books의 노트북을 에버노트에 생성하는 함수 제작,이후 노트북 딕셔너리에 추가
+	# 할일 : workbook의 노트북 guid를 구해 값으로 할당하는 함수 제작
+	return workbook
+	
+			
+	
+		
+				
+	
+	
 # 한글 문제 해결용 코드
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -17,9 +49,9 @@ sys.setdefaultencoding('utf-8')
 auth_token = pro_token()
 
 if auth_token == test_token():
-    client = EvernoteClient(token=auth_token, sandbox=True)
+	client = EvernoteClient(token=auth_token, sandbox=True)
 elif auth_token == pro_token():
-    client = EvernoteClient(token=auth_token, sandbox=False)
+	client = EvernoteClient(token=auth_token, sandbox=False)
 
 
 note_store = client.get_note_store()
