@@ -1,5 +1,5 @@
-#-*- coding: utf-8 -*-#
-from my_token import test_token,pro_token
+# -*- coding: utf-8 -*-#
+from my_token import test_token, pro_token
 import sys
 import hashlib
 import binascii
@@ -7,40 +7,39 @@ import evernote.edam.type.ttypes as Types
 from os import listdir
 from evernote.api.client import EvernoteClient
 
+
 # 에버노트에 노트북 생성해주는 함수
-# 할일 : 코드 테스트
-def mk_notebook(nbooks,note_store):
-	for nbook in nbooks:
-		notebook = Types.Notebook()
-		notebook.name = nbook
-		cre_notebook = note_store.createNotebook(notebook) 
+def mk_notebook(nbooks, note_store):
+    for nbook in nbooks:
+        notebook = Types.Notebook()
+        notebook.name = nbook
+        cre_notebook = note_store.createNotebook(notebook)
+
 
 # 에버노트의 노트북명과 guid로 딕셔너리를 만들어주는 함수
 def bookguid(note_store):
-	book_guid = {}
-	notebooks = note_store.listNotebooks()
-	for notebook in notebooks:
-		book_guid[notebook.name]=notebook.guid
-	return book_guid
-	
+    book_guid = {}
+    notebooks = note_store.listNotebooks()
+    for notebook in notebooks:
+        book_guid[notebook.name] = notebook.guid
+    return book_guid
+
+
 # 노트북 조회후 에버노트에 없는 노트북은 생성하여 노트북을 키값으로 하는 딕셔너리 반환
-def match_notebooks(work_path,note_store):
-	notebooks = bookguid(note_store)#에버노트 노트북:guid 딕셔너리
-	folder_list = listdir(work_path)	#로컬 노트북(폴더) 리스트
-	nmatch_books =[] # 에버노트에 존재하지 않는 노트북 리스트
-	
-	for nbook in folder_list:	#매칭되는 노트북 조회
-		if nbook in notebooks:
-			pass
-		else:
-			nmatch_books.append(nbook)	# 에버노트에 없는 노트북은 리스트에 추가
-	# 할일 : nmatch_books의 노트북을 에버노트에 생성하는 함수 제작,이후 노트북 딕셔너리에 추가
-	# 할일 : workbook의 노트북 guid를 구해 값으로 할당하는 함수 제작
-	mk_notebook(nmatch_books,note_store)
-	return bookguid()
-				
-	
-	
+def match_notebooks(work_path, note_store):
+    notebooks = bookguid(note_store)  # 에버노트 노트북:guid 딕셔너리
+    folder_list = listdir(work_path)  # 로컬 노트북(폴더) 리스트
+    nmatch_books = []  # 에버노트에 존재하지 않는 노트북 리스트
+
+    for nbook in folder_list:  # 매칭되는 노트북 조회
+        if nbook in notebooks:
+            pass
+        else:
+            nmatch_books.append(nbook)  # 에버노트에 없는 노트북은 리스트에 추가
+    mk_notebook(nmatch_books, note_store)
+    return bookguid(note_store)
+
+
 # 한글 문제 해결용 코드
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -48,16 +47,18 @@ sys.setdefaultencoding('utf-8')
 # 토큰키 보안을 위하여 git에 등록하지 않은 파일에 토큰정보 저장
 # sandbox token 이용시 test_token()
 # 프로덕션 token 이용시 pro_token()
-auth_token = pro_token()
-work_path = '최상의 작업폴더 절대경로'
+auth_token = test_token()
+work_path = '/Users/sinsky/Desktop/sync 노트정리/에버노트'
 
 if auth_token == test_token():
-	client = EvernoteClient(token=auth_token, sandbox=True)
+    client = EvernoteClient(token=auth_token, sandbox=True)
 elif auth_token == pro_token():
-	client = EvernoteClient(token=auth_token, sandbox=False)
+    client = EvernoteClient(token=auth_token, sandbox=False)
 
 note_store = client.get_note_store()
-notebooks = match_notebooks(work_path,note_store)
+
+# 폴더명과 노트북명을 비교하여 존재유무 확인 및 생성
+notebooks = match_notebooks(work_path, note_store)
 
 
 '''
