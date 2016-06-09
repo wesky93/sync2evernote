@@ -15,7 +15,7 @@ def ctime_prefix(name):
     :return: 파일 생성시간 prefix (str)
     """
     ctime = path.getmtime(name)
-    ctime = str(ctime)[:-2] + "_"
+    ctime = str(ctime) + "_"
     return ctime
 
 
