@@ -4,6 +4,7 @@ import sys
 import hashlib
 import glob
 import binascii
+import time
 import evernote.edam.type.ttypes as Types
 from os import listdir, path, remove
 from evernote.api.client import EvernoteClient
@@ -67,11 +68,12 @@ def file_info(png):
     """
 	파일에서 생성 날짜와 파일명을 추출해준다.
 	:param png: 파일 절대경로
-	:return: 제목,생성날짜(추가예정)
+	:return: 제목,생성날짜
 	"""
     file = path.basename(png)
-    name = path.splitext(file)[0]
-    return name
+    name = path.splitext(file)[0][13:].strip()  # 노트명 앞뒤 공백존재시 오류 발생문제 제
+    ctime = float(file[:12])    # 파일 생성날짜 추출
+    return name,ctime
 
 
 # 노트를 생성하여 에버노트에 업로드
@@ -83,20 +85,22 @@ def post_note(note_store, png, book_guid):
     :param book_guid: 노트가 속할 노트북의 guid
     :return:
     """
-    resource, hash = mk_resource(png)
-    note = Types.Note()
-    note.title = file_info(png)
-    note.resources = [resource]
-    note.notebookGuid = book_guid
-    note.content = '<?xml version="1.0" encoding="UTF-8"?>'
-    note.content += '<!DOCTYPE en-note SYSTEM ' \
-                    '"http://xml.evernote.com/pub/enml2.dtd">'
-    note.content += '<en-note>sync에서 작성한 노트입니다.<br/>'
-    note.content += '<en-media type="image/png" hash="' + hash + '"/>'
-    note.content += '</en-note>'
-    note_store.createNote(note)
-
-
+    try:
+        resource, hash = mk_resource(png)
+        note = Types.Note()
+        note.title, ctime = file_info(png)
+        note.created = ctime*1000
+        note.resources = [resource]
+        note.notebookGuid = book_guid
+        note.content = '<?xml version="1.0" encoding="UTF-8"?>'
+        note.content += '<!DOCTYPE en-note SYSTEM ' \
+                        '"http://xml.evernote.com/pub/enml2.dtd">'
+        note.content += '<en-note>sync에서 '+time.ctime(ctime)+'에 작성한 노트입니다.<br/>'
+        note.content += '<en-media type="image/png" hash="' + hash + '"/>'
+        note.content += '</en-note>'
+        note_store.createNote(note)
+    except Exception as error:
+        print note.title," 작업중 ",error," 발생"
 # 한글 문제 해결용 코드
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -104,7 +108,7 @@ sys.setdefaultencoding('utf-8')
 # 토큰키 보안을 위하여 git에 등록하지 않은 파일에 토큰정보 저장
 # sandbox token 이용시 test_token()
 # 프로덕션 token 이용시 pro_token()
-auth_token = test_token()
+auth_token = pro_token()
 work_path = '/Users/sinsky/Desktop/sync 노트정리/에버노트'
 
 if auth_token == test_token():
