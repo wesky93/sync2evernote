@@ -64,7 +64,7 @@ work_dir = "/Users/sinsky/Desktop/sync 노트정리/에버노트"
 for notebook in listdir(work_dir):
     book_path = path.join(work_dir, notebook)
     if path.isdir(book_path):  # 디렉토리 인지 확인
-        file_list = glob.glob("%s/*.pdf" % (book_path))
+        file_list = glob.glob("%s/*.PDF" % (book_path))
         convert_pdf(file_list)
 
 
