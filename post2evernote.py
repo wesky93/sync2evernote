@@ -126,3 +126,5 @@ for notebook in listdir(work_path):
         for png in file_list:
             post_note(note_store, png, book_guid)
             remove(png)
+
+print "sync노트를 성공적으로 에버노트에 업로드 하였습니다."
